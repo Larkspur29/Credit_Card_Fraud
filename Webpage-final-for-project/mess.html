@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/boxicons/2.0.7/css/boxicons.min.css">
+  <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="dastyle.css">
+  <style>
+    /* Google Font Link */
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+
+    .hello {
+      width: 75%;
+      margin: 10px auto;
+      margin-bottom: 0px;
+      padding: 10px;
+      border-radius: 15px;
+    }
+
+    /* Add your table styles here */
+    .hello .animated-table {
+      width: 75%;
+      border-collapse: separate !important;
+      overflow: auto;
+      text-align: center;
+      margin: 20px auto;
+      font-family: 'Helvetica Neue', sans-serif;
+      border-radius: 15px;
+    }
+
+    .hello .animated-table th,
+    .hello .animated-table td {
+      padding: 20px;
+      text-align: center;
+      border: 1px solid rgba(0, 0, 0);
+      border-radius: 15px;
+    }
+
+    .hello .animated-table thead {
+      background-color: #222831;
+      color: #FFF8C9;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+    }
+
+    .hello .animated-table tbody tr:nth-child(even) {
+      background-color: rgb(120, 214, 198, 0.1);
+      border-radius: 15px;
+    }
+
+    /* Animations on table cells */
+    .hello .animated-table td {
+      transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+      border-radius: 15px;
+    }
+
+    .hello .animated-table td:hover {
+      transform: scale(1.05);
+      background-color: #419197;
+      color: #F5FCCD;
+      border-radius: 15px;
+    }
+
+    /* Animation on table header */
+    .hello .animated-table th:hover {
+      background-color: #78D6C6;
+      border-radius: 15px;
+    }
+
+    /* Add a subtle shadow to table header */
+    .hello .animated-table thead {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+    }
+  </style>
+  <script src="script.js"></script>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plus icon'></i>
+      <div class="logo_name">Credit Card</div>
+      <i class='bx bx-menu' id="btn"></i>
+    </div>
+    <ul class="nav-list">
+      <li>
+        <i class='bx bx-search'></i>
+        <input type="text" placeholder="Search...">
+        <span class="tooltip">Search</span>
+      </li>
+      <li>
+        <a href="dash.html">
+          <i class='bx bx-grid-alt'></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+        <span class="tooltip">Dashboard</span>
+      </li>
+      <li>
+        <a href="user.html">
+          <i class='bx bx-user'></i>
+          <span class="links_name">User</span>
+        </a>
+        <span class="tooltip">User</span>
+      </li>
+      <li>
+        <a href="mess.html">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">Messages</span>
+        </a>
+        <span class="tooltip">Messages</span>
+      </li>
+      <li>
+        <a href="ana.html">
+          <i class='bx bx-pie-chart-alt-2'></i>
+          <span class="links_name">Analytics</span>
+        </a>
+        <span class="tooltip">Analytics</span>
+      </li>
+      <li class="profile">
+        <div class="profile-details">
+          <img src="https://drive.google.com/uc?export=view&id=1ETZYgPpWbbBtpJnhi42_IR3vOwSOpR4z" alt="profileImg">
+          <div class="name_job">
+            <div class="name"></div>
+            <div class="job"></div>
+          </div>
+        </div>
+        <i class='bx bx-log-out' id="log_out"></i>
+      </li>
+    </ul>
+  </div>
+  <section class="home-section">
+    <div class="text">Messages</div>
+    <div class="hello">
+      <table class="animated-table">
+        <thead>
+          <th>Message</th>
+        </thead>
+        <tbody id="tbody1"></tbody>
+      </table>
+    </div>
+  </section>
+  <script type="module">
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqrc59NZB8qWyA0V95PMIzzElFYhAKOmw",
+      authDomain: "credit-card-702af.firebaseapp.com",
+      databaseURL: "https://credit-card-702af-default-rtdb.firebaseio.com",
+      projectId: "credit-card-702af",
+      storageBucket: "credit-card-702af.appspot.com",
+      messagingSenderId: "747727124958",
+      appId: "1:747727124958:web:47bf1d0f94c700d72e054f"
+    };
+
+    // Initialize Firebase
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import {getDatabase, ref, onValue} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
+
+    const tbody = document.getElementById('tbody1');
+
+    // Function to add messages to the table
+    function AddMessagesToTable(message, index) {
+      const trow = document.createElement('tr');
+      const td = document.createElement('td');
+      td.innerHTML = message;
+      trow.appendChild(td);
+      trow.setAttribute('data-index', index); // Set the data-index attribute for sorting
+      tbody.appendChild(trow);
+    }
+
+    // Function to get and update data from Firebase messages dataset
+    function GetMessagesOnValue() {
+      const dbRef = ref(db, "/messages");
+      onValue(dbRef, (snapshot) => {
+        const messages = [];
+        snapshot.forEach(childSnapshot => {
+          messages.push(childSnapshot.val());
+        });
+        // Sort the data by the "index" field if available
+        messages.sort((a, b) => (a.index || 0) - (b.index || 0));
+        tbody.innerHTML = ""; // Clear the table
+        messages.forEach((message, index) => {
+          AddMessagesToTable(message.message, index);
+        });
+      });
+    }
+    window.onload = GetMessagesOnValue;
+  </script>
+  </section>
+</body>
+
+</html>

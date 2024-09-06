@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/boxicons/2.0.7/css/boxicons.min.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="dastyle.css">
+  <script src="script.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      color: white;
+      margin: 0;
+      background: linear-gradient(125deg, #fbd7e5, #bdf4fa);
+    }
+
+    .container {
+      display: flex;
+      height: auto;
+    }
+
+    .split {
+      width: 100%;
+      /* Change the width to 100% to fit the container */
+      background-color: transparent;
+      border-radius: 50px;
+      padding: 20px;
+      margin: 30px;
+      overflow: visible;
+      height: auto;
+      /* Allow content overflow */
+    }
+
+    .left {
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      height: auto;
+    }
+
+    .right {
+      background-color: #fff;
+      height: auto;
+
+    }
+
+    .centered {
+      height: auto;
+      text-align: center;
+    }
+
+    .hello .animated-table {
+      width: 100%;
+      /* Set the table width to 100% */
+      border-collapse: collapse;
+      border-radius: 10px;
+      font-family: 'Helvetica Neue', sans-serif;
+      overflow: visible;
+      height: auto;
+      background-color: #222831;
+    }
+
+    .hello .animated-table th,
+    .hello .animated-table td {
+      padding: 20px;
+      text-align: center;
+      border: 1px solid rgba(0, 0, 0);
+      height: auto;
+    }
+
+    .hello .animated-table thead {
+      background-color: #222831;
+      color: #FFF8C9;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .hello .animated-table tbody tr:nth-child(even) {
+      background-color: rgba(120, 214, 198, 0.1);
+    }
+
+    .hello .animated-table td {
+      transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .hello .animated-table td:hover {
+      transform: scale(1.05);
+      background-color: #419197;
+      color: #F5FCCD;
+    }
+
+    /* Animation on table header */
+    .hello .animated-table th:hover {
+      background-color: #78D6C6;
+    }
+
+    .hello .animated-table thead {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"> </script>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plus icon'></i>
+      <div class="logo_name">Credit Card</div>
+      <i class='bx bx-menu' id="btn"></i>
+    </div>
+    <ul class="nav-list">
+      <li>
+        <i class='bx bx-search'></i>
+        <input type="text" placeholder="Search...">
+        <span class="tooltip">Search</span>
+      </li>
+      <li>
+        <a href="dash.html">
+          <i class='bx bx-grid-alt'></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+        <span class="tooltip">Dashboard</span>
+      </li>
+      <li>
+        <a href="user.html">
+          <i class='bx bx-user'></i>
+          <span class="links_name">User</span>
+        </a>
+        <span class="tooltip">User</span>
+      </li>
+      <li>
+        <a href="mess.html">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">Messages</span>
+        </a>
+        <span class="tooltip">Messages</span>
+      </li>
+      <li>
+        <a href="ana.html">
+          <i class='bx bx-pie-chart-alt-2'></i>
+          <span class="links_name">Analytics</span>
+        </a>
+        <span class="tooltip">Analytics</span>
+      </li>
+      <li class="profile">
+        <div class="profile-details">
+          <img src="https://drive.google.com/uc?export=view&id=1ETZYgPpWbbBtpJnhi42_IR3vOwSOpR4z" alt="profileImg">
+          <div class="name_job">
+            <div class="name"></div>
+            <div class="job"></div>
+          </div>
+        </div>
+        <i class='bx bx-log-out' id="log_out"></i>
+      </li>
+    </ul>
+  </div>
+  <section class="home-section">
+    <div class="text">Outliers detected</div>
+    <div class="container">
+      <div class="split left">
+        <div class="centered">
+          <div class="hello">
+            <table class="animated-table">
+              <thead>
+                <th>Transaction Date</th>
+                <th>Amount</th>
+                <th>Transaction Number</th>
+              </thead>
+              <tbody id="tbody1"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="split right">
+        <div class="centered">
+          <canvas id="amountChart" width="auto" height="auto"></canvas></canvas>
+        </div>
+      </div>
+    </div>
+
+  </section>
+  <script type="module">
+    var tbody = document.getElementById('tbody1');
+    function AddItemsToTable(name, amount, city, index) {
+      var trow = document.createElement('tr');
+      var td1 = document.createElement('td');
+      var td2 = document.createElement('td');
+      var td3 = document.createElement('td');
+      td1.innerHTML = name;
+      td2.innerHTML = amount;
+      td3.innerHTML = city;
+      trow.appendChild(td1);
+      trow.appendChild(td2);
+      trow.appendChild(td3);
+      trow.setAttribute('data-index', index); // Set the data-index attribute for sorting
+      tbody.appendChild(trow);
+    }
+
+    // Function to add all items to the table
+    function AddAllItemsToTable(data) {
+      tbody.innerHTML = "";
+      data.forEach(element => {
+        AddItemsToTable(element.trans_date_trans_time, element.amt, element.trans_num, element.index);
+      });
+    }
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqrc59NZB8qWyA0V95PMIzzElFYhAKOmw",
+      authDomain: "credit-card-702af.firebaseapp.com",
+      databaseURL: "https://credit-card-702af-default-rtdb.firebaseio.com",
+      projectId: "credit-card-702af",
+      storageBucket: "credit-card-702af.appspot.com",
+      messagingSenderId: "747727124958",
+      appId: "1:747727124958:web:47bf1d0f94c700d72e054f"
+    };
+
+    // Initialize Firebase
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import {getDatabase, ref, onValue} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
+
+    // Function to get and update data from Firebase
+    function GetAllDataOnValue() {
+      const dbRef = ref(db, "/outliers");
+      const dbRefNotOutliers = ref(db, "/not_outliers");
+
+      onValue(dbRef, (snapshotOutliers) => {
+        const dataOutliers = [];
+        snapshotOutliers.forEach(childSnapshot => {
+          dataOutliers.push(childSnapshot.val());
+        });
+        dataOutliers.sort((a, b) => a.index - b.index);
+        AddAllItemsToTable(dataOutliers);
+
+        onValue(dbRefNotOutliers, (snapshotNotOutliers) => {
+          const dataNotOutliers = [];
+          snapshotNotOutliers.forEach(childSnapshot => {
+            dataNotOutliers.push(childSnapshot.val());
+          });
+
+          const combinedData = [];
+
+          dataOutliers.forEach(item => {
+            combinedData.push({
+              index: item.index,
+              amt: item.amt,
+              isOutlier: true
+            });
+          });
+
+          // Add the not_outliers data to the combined data
+          dataNotOutliers.forEach(item => {
+            combinedData.push({
+              index: item.index,
+              amt: item.amt,
+              isOutlier: false
+            });
+          });
+
+          // Sort the combined data by the "index" field
+          combinedData.sort((a, b) => a.index - b.index);
+
+          // Update the chart
+          if (chart) {
+            chart.destroy(); // Destroy the existing chart instance
+          }
+          CreateLineChart(combinedData);
+        });
+      });
+    }
+    var chart;
+
+    function CreateLineChart(data) {
+      var ctx = document.getElementById('amountChart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.map(item => item.index),
+          datasets: [{
+            label: 'Outliers',
+            data: data.map(item => item.isOutlier ? item.amt : null),
+            borderColor: 'rgba(255, 0, 0, 1)',
+            borderWidth: 1
+          }, {
+            label: 'Not Outliers',
+            data: data.map(item => !item.isOutlier ? item.amt : null),
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    // Trigger the function when the page loads
+    window.onload = GetAllDataOnValue;
+  </script>
+</body>
+
+</html>

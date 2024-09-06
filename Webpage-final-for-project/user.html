@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/boxicons/2.0.7/css/boxicons.min.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="dastyle.css">
+  <style>
+    .user-card {
+      width: 300px;
+      height: 350px;
+      background-color: #fff;
+      /* Header background color */
+      border-radius: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      margin: 30px auto;
+      transition: transform 0.2s;
+    }
+
+    .user-card:hover {
+      transform: scale(1.05);
+    }
+
+    .user-header {
+      text-align: center;
+      padding: 10px;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      background-color: #FFDFDF;
+      /* Header background color */
+    }
+
+    .user-header h2 {
+      color: #fff;
+      /* Header text color */
+      margin: 0;
+    }
+
+    .user-icon {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .user-icon img {
+      width: 80px;
+    }
+
+    #userData {
+      padding: 20px;
+      line-height: 150%;
+      font-family: Garamond;
+    }
+
+    #userData p {
+      margin: 10px 0;
+    }
+  </style>
+  <script src="script.js"></script>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plus icon'></i>
+      <div class="logo_name">Credit Card</div>
+      <i class='bx bx-menu' id="btn"></i>
+    </div>
+    <ul class="nav-list">
+      <li>
+        <i class='bx bx-search'></i>
+        <input type="text" placeholder="Search...">
+        <span class="tooltip">Search</span>
+      </li>
+      <li>
+        <a href="dash.html">
+          <i class='bx bx-grid-alt'></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+        <span class="tooltip">Dashboard</span>
+      </li>
+      <li>
+        <a href="user.html">
+          <i class='bx bx-user'></i>
+          <span class="links_name">User</span>
+        </a>
+        <span class="tooltip">User</span>
+      </li>
+      <li>
+        <a href="mess.html">
+          <i class='bx bx-chat'></i>
+          <span class="links_name">Messages</span>
+        </a>
+        <span class="tooltip">Messages</span>
+      </li>
+      <li>
+        <a href="ana.html">
+          <i class='bx bx-pie-chart-alt-2'></i>
+          <span class="links_name">Analytics</span>
+        </a>
+        <span class="tooltip">Analytics</span>
+      </li>
+      <li class="profile">
+        <div class="profile-details">
+          <img src="https://drive.google.com/uc?export=view&id=1ETZYgPpWbbBtpJnhi42_IR3vOwSOpR4z" alt="profileImg">
+          <div class="name_job">
+            <div class="name"></div>
+            <div class="job"></div>
+          </div>
+        </div>
+        <i class='bx bx-log-out' id="log_out"></i>
+      </li>
+    </ul>
+  </div>
+  <section class="home-section">
+    <div class="text">User Details</div>
+    <div class="user-card">
+      <div class="user-header">
+        <h2>User Profile</h2>
+      </div>
+      <div class="user-icon">
+        <img src="user-286.png" alt="Credit Card Icon">
+      </div>
+      <div id="userData">
+      </div>
+    </div>
+  </section>
+  <script>
+    // Initialize Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyA3Kg095QJYHBxpLkk3hL-lPeGHHpKYFCE",
+      authDomain: "login-and-signu.firebaseapp.com",
+      databaseURL: "https://login-and-signu-default-rtdb.firebaseio.com",
+      projectId: "login-and-signu",
+      storageBucket: "login-and-signu.appspot.com",
+      messagingSenderId: "324586864076",
+      appId: "1:324586864076:web:ded190af16f985f666b169"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.database();
+
+    // Get the last added user data
+    var ref = db.ref("users");
+    ref.orderByChild("index").limitToLast(1).on("child_added", function (snapshot) {
+      var data = snapshot.val();
+      document.getElementById('userData').innerHTML =
+        'Name  :   ' + data.name + '<br>' +
+        'Email :   ' + data.email + '<br>' +
+        'Phone :   ' + data.Phone + '<br>' +
+        'Card Number  :   ' + data.Cardnumber + '<br>' +
+        'Expiry  :   ' + data.Expiry;
+    });
+  </script>
+</body>
+</html>

