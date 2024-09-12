@@ -24,10 +24,10 @@ def sms(num, amount, date):
   # Get the last added data
   last_data = sorted_result[-1][1]
 
-  account_sid = 'ACed72ecfedefbe154311ac8c4dffd551d'
-  auth_token = 'd988b05d69e79545e3a8cc27eb412c40'
+  account_sid = ''
+  auth_token = ''
   client = Client(account_sid, auth_token)
-  twilio_phone_number = '+12293608117'
+  twilio_phone_number = ''
   a = '+91'
   b = last_data['Phone']
   recipient_phone_number = a + b
